@@ -2,14 +2,14 @@
   //Muutujad
   $myName = "Kertu";
   $myFamilyName = "Kipper";
-  $practiceStarted = "2017-09-11 8.15";
-  $practiceStarted = date("d.m.Y")  ." " ."8.15"; 
+  $myAge = 0;
+  $myBirthYear;
+  $myLivedYearsList = "";
 
+  $monthNamesEt = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"];
 
-  // echo strtotime($practiceStarted);
-  // echo strtotime("now");
-  $timePassed = round((strtotime("now") - strtotime($practiceStarted)) / 60);
-  echo $timePassed;
+  //var_dump ($monthNamesEt);
+  //echo $monthNamesEt[8];
 
   $hourNow = date("H");
   $partOfDay = "";
@@ -22,6 +22,19 @@
   }
   if ($hourNow > 16) {
     $partOfDay = "vaba aeg";
+  }
+
+  // Nüüd vaatame, kas ja mida kasutaja sisestas
+  if (isset ($_POST["yearBirth"])) {
+    $myBirthYear = $_POST["yearBirth"];
+    $myAge = date("Y") - $myBirthYear;
+
+    // tekitame loendi kõigist elatud aastatest
+    $myLivedYearsList .= "<ul> \n";
+    for ($i = $myBirthYear; $i <= date("Y"); $i++){
+      $myLivedYearsList .= "<li>" .$i ."</li> \n";
+    }
+    $myLivedYearsList .= "</ul> \n";
   }
 
 ?>
@@ -45,8 +58,9 @@
         </p>
         <?php
           echo "<p>Täna on ilus ilm.</p>";
-          echo "<p>Täna on "; 
-          echo date("d.m.Y");
+          echo "<p>Täna on ";
+          $monthIndex = date("n") - 1;  // n on kuu number ilma lisanullita ees 
+          echo date("d. ") .$monthNamesEt[$monthIndex] .date(" Y");
           echo ".</p>";
           echo "<p>Lehe laadimise hetkel oli kell: " .date("H:i:s") ."</p>";
           echo "Praegu on " .$partOfDay .".";
@@ -54,6 +68,20 @@
         <p>PHP käivitatakse lehe laadimisel ja siis tehakse kogu töö ära. Hiljem, kui vaja midagi jälle "kalkuleerida", siis laetakse kogu leht uuesti.</p>
         <?php
           echo "<p>Lehe autori täisnimi on: " .$myName ." " .$myFamilyName .".</p>";
+        ?>
+        <h2>Vanus</h2>
+        <p>Järgnevalt palume sisestada oma sünniaasta</p>
+        <form method="POST"> 
+          <label>Teie sünniaasta: </label>
+          <input id="yearBirth" name="yearBirth" type="number" min="1900" max="2017" value="<?php echo $myBirthYear; ?>">
+          <input id="submitYearBirth" name="submitYearBirth" type="submit" value="Kinnita">
+        </form>
+        <p>Teie vanus on <?php echo $myAge; ?> aastat.</p>
+        <?php
+          if ($myLivedYearsList != "") {
+            echo "<h3>Oled elanud järgnevatel aastatel</h3> \n";
+            echo $myLivedYearsList;
+          }
         ?>
       </div>
   </body>
