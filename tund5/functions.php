@@ -1,5 +1,40 @@
 <?php
   $database = "if17_kippkert";
+// alustan sessiooni
+  session_start
+//sisselogimise funktsioon
+  function signIn($email, $password) {
+    $notice = "";
+    //ühendus serveriga
+    $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+    $stmt = $mysqli->prepare("SELECT id, email, password FROM vpusers WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->bind_result($id, $emailFromDb, $passwordFromDb);
+    $stmt->execute();
+
+    //kontrollime vastavust
+    if ($stmt->fetch()) {
+      $hash = hash("sha512", $password);
+      if ($hash == $passwordFromDb) {
+        $notice = "Logisite sisse";
+
+        // määran sessiooni muutujad 
+        $_SESSION["userId"] = $id;
+        $_SESSION["userEmail"] = $emailFromDb;
+        
+        //liigume edasi pealehele (main.php)
+        header("Location: main.php");
+        exit();
+      } else {
+          $notice = "Vale salasõna";
+      }
+    } else {
+        $notice = 'Sellise kasutajatunnusega "' .$email .'" pole kasutajat';
+    }
+    $stmt->close();
+    $mysqli->close();
+    return $notice;
+  }
 //kasutaja salvestamise funktsioon
   function signUp($signupFirstName, $signupFamilyName, $signupBirthDate, $gender, $signupEmail, $signupPassword) {
     //loome andmebaasi ühenduse
