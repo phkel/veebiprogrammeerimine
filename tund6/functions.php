@@ -74,7 +74,9 @@
   function readAllIdeas() {
     $ideasHTML = "";
     $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
-    $stmt = $mysqli->prepare("SELECT idea, ideaColor FROM vpuserideas");
+    //$stmt = $mysqli->prepare("SELECT idea, ideaColor FROM vpuserideas WHERE userid = ?");
+    $stmt = $mysqli->prepare("SELECT idea, ideaColor FROM vpuserideas WHERE userid = ? ORDER BY id DESC");
+    $stmt->bind_param("i", $_SESSION["userId"]);
     $stmt->bind_result($idea, $color);
     $stmt->execute();
     //$result = array();
@@ -84,6 +86,57 @@
     $stmt->close();
     $mysqli->close();
     return $ideasHTML;
+  }
+
+//uusima idee lugemine
+  function latestIdea(){
+    $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+    // $stmt = $mysqli->prepare("SELECT @last_id := MAX(id) FROM vpuserideas"); 
+    // $stmt->bind_result($last_id);
+    // $stmt->close();
+    $stmt = $mysqli->prepare("SELECT idea FROM vpuserideas WHERE id = (SELECT MAX(id) FROM vpuserideas)");
+    //$stmt->bind_param("i", $last_id);
+    $stmt->bind_result($idea);
+    $stmt->execute();
+    $stmt->fetch();
+    $stmt->close();
+    $mysqli->close();
+    return $idea;
+  }
+
+//genderi muutmine
+  function genderLabel($genderID) { 
+    $label = "";
+    if ($genderID === 2) {
+      $label = "naine";
+    } else {
+      $label = "mees";
+    }
+    return $label;
+  }
+
+//kasutaja tabeli sisu 
+  function fetchAllUserinfo() {
+    $html = "";
+    $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+    //$stmt = $mysqli->prepare("SELECT idea, ideaColor FROM vpuserideas WHERE userid = ?");
+    $stmt = $mysqli->prepare("SELECT firstname, lastname, email, birthday, gender FROM vpusers");
+    // $stmt->bind_param("sssis", $signupFirstName, $signupFamilyName, $signupEmail,$signupBirthDate, $gender);
+    $stmt->bind_result($signupFirstName, $signupFamilyName, $signupEmail,$signupBirthDate, $gender);
+    $stmt->execute();
+    //$result = array();
+    while ($stmt->fetch()) {
+      $html .= '<tr>'
+          .'<td>'.$signupFirstName .'</td>'
+          .'<td>'.$signupFamilyName.'</td>'
+          .'<td>'.$signupEmail.'</td>'
+          .'<td>'.$signupBirthDate.'</td>'
+          .'<td>'.genderLabel($gender).'</td>'
+        .'</tr>'; 
+    }
+    $stmt->close();
+    $mysqli->close();
+    return $html;
   }
 
 //sisestuse kontrollimise funktsioon

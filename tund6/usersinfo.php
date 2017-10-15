@@ -12,12 +12,7 @@
     session_destroy();
     header("Location: login.php");
   }
-
-  /*while($stmt->fetch()) {
-    
-  }
-  */
-
+  $fetchAllUserinfo = fetchAllUserinfo();
 ?>
 
 <!DOCTYPE html>
@@ -36,18 +31,22 @@
       <p><a href="main.php">Pealeht</a></p>
       <hr>
       <h2>Kõik süsteemi kasutajad</h2>
+      
       <table border="1" style="border: 1px solid black; border-collapse: collapse">
+      <thead>
       <tr>
         <th>Eesnimi</th>
         <th>Perekonnanimi</th>
         <th>Email</th>
+        <th>Sünna</th>
+        <th>Sugu</th>
       </tr>
-      <tr>
-        <td>Juku</td>
-        <td>Mets</td>
-        <td>juku@mets.ee</td>
-      </tr>
+      </thead>
+      <tbody>
+      <?php echo $fetchAllUserinfo ;?>
+      </tbody>
       </table>
+      
       <p><a href="?logout=1">Logi välja</a></p>
 
   </body>

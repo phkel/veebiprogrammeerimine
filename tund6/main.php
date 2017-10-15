@@ -1,5 +1,6 @@
 <?php
   require("functions.php");
+  $calloutName = "";
   //kui pole sisseloginud, siis sisselogimise lehele
   if(!isset($_SESSION["userId"])) {
     header("Location: login.php");
@@ -42,15 +43,14 @@
     <link rel="stylesheet" href="main.css">
   </head>
   <body>
-      <h1>Veebiprogrammeerimine</h1>
-      <p>Veebileht on loodud veebiprogrammeerimise kursusel ning ei sisalda   tõsiseltvõetavat sisu.</p>
-      <h2>Unde impedit</h2>
-      <p>Consequatur voluptatibus eligendi architecto. Odio dolores corrupti error. Vel amet quas vel totam repudiandae. Ducimus necessitatibus et repellat corporis eveniet doloremque tenetur.
-      </p>
-      <p><a href="usersinfo.php">Kasutajate info</a></p>
-      <p><a href="usersideas.php">Kasutajate ideed</a></p>
-      <p>Üks pilt Tallinna Ülikooli koridorist.</p>
-      <img src="<?php echo $dirToRead .$picToShow?>" alt="Tallinna Ülikool">
-      <p><a href="?logout=1">Logi välja</a></p>
+    <h1><?php echo $_SESSION["firstname"] ." " .$_SESSION["lastname"]; ?></h1>
+    <hr>
+    <h2>Veebiprogrammeerimine</h2>
+    <p>Veebileht on loodud veebiprogrammeerimise kursusel ning ei sisalda   tõsiseltvõetavat sisu.</p>
+    <p><a href="usersinfo.php">Kasutajate info</a></p>
+    <p><a href="usersideas.php">Kasutajate ideed</a></p>
+    <p>Üks pilt Tallinna Ülikooli koridorist.</p>
+    <img src="<?php echo $dirToRead .$picToShow?>" alt="Tallinna Ülikool">
+    <p><a href="?logout=1">Logi välja</a></p>
   </body>
 </html>

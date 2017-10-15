@@ -55,7 +55,8 @@
       <hr>
       <h2>Senised mõtted</h2>
       <div style="width: 40%">
-        <?php echo $allIdeas ;?>
+        <?php echo $allIdeas
+       ;?>
       </div>
   </body>
 </html>
