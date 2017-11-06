@@ -1,6 +1,13 @@
 <?php
-  require("../../../config.php");
-  require("../tund5/functions.php");
+  // require("../../../config.php");
+  require("functions.php");
+
+  //kui on sisseloginud, siis kohe main.php lehele
+  if (isset($_SESSION["userId"])) {
+    header("Location: main.php");
+    exit();
+  }
+  $ideaHTML = "";
 
   $signupFirstName = "";
   $signupFamilyName = "";
@@ -13,6 +20,7 @@
   
   $loginEmail = "";
   $loginEmailError = "";
+  $notice = "";
 
   $signupFirstNameError = "";
   $signupFamilyNameError = "";
@@ -22,16 +30,25 @@
   $signupBirthDayError = "";
   $signupBirthMonthError = "";
   $signupBirthYearError = "";
-  
+
+  $ideaHTML = latestIdea();  
+  //kas logitakse sisse
+  if (isset($_POST["loginButton"])) {
 	
-	//kas on kasutajanimi sisestatud
-	if (isset ($_POST["loginEmail"])){
-		if (empty ($_POST["loginEmail"])){
-			$loginEmailError ="NB! Ilma selleta ei saa sisse logida!";
-		} else {
-			$loginEmail = $_POST["loginEmail"];
-		}
-	}
+    //kas on kasutajanimi sisestatud
+    if (isset ($_POST["loginEmail"])){
+      if (empty ($_POST["loginEmail"])){
+        $loginEmailError ="NB! Ilma selleta ei saa sisse logida!";
+      } else {
+        $loginEmail = $_POST["loginEmail"];
+      }
+    }
+    if(!empty($loginEmail) and !empty($_POST["loginPassword"])) {
+      //kutsun sisselogimise funktsiooni
+      $notice = signIn($loginEmail, $_POST["loginPassword"]);
+    }
+  } //if loginButton
+
   
   //kontrollime, kas kirjutati eesnimi
   if (isset ($_POST["signupFirstName"])){
@@ -115,24 +132,8 @@
     //krüpteerin parooli
     $signupPassword = hash("sha512", $_POST["signupPassword"]);
     //echo "\n Parooli " .$_POST["signupPassword"] ."räsi" . $signupPassword;
-    //loome andmebaasi ühenduse
-    $database = "if17_kippkert";
-    $mysqli = new mysqli($serverHost, $serverUsername, $serverPassword, $database);
-    //valmistame ette käsu andmebaasiserverile
-    $stmt = $mysqli->prepare("INSERT INTO vpusers (firstname, lastname, birthday, gender, email, password) VALUES (?, ?, ?, ?, ?, ?)");
-    echo $mysqli->error;
-    //s - strin
-    //i - integer ehk täisarv
-    //d - decimal ehk murdarvud
-    $stmt->bind_param("sssiss", $signupFirstName, $signupFamilyName, $signupBirthDate, $gender, $signupEmail, $signupPassword);
-    //$stmnt->execute ();
-    if ($stmt->execute()) {
-      echo "\n Õnnestus";
-    } else {
-        echo "\n tekkis viga: " .$stmt->error;
-    }
-    $stmt->close();
-    $mysqli->close();
+    //kutsume välja kasutaja salvestamise funktsiooi 
+    signUp($signupFirstName, $signupFamilyName, $signupBirthDate, $gender, $signupEmail, $signupPassword);
   }
   
 
@@ -185,7 +186,9 @@
 	<title>Sisselogimine või uue kasutaja loomine</title>
 </head>
 <body>
-	<h1>Logi sisse</h1>
+  <h1>Mõtete veeb</h1>
+  <p>Värskeim mõte: <span><?php echo $ideaHTML; ?></span></p>
+	<h2>Logi sisse</h2>
 	<p>Sisselogimise harjutamine.</p>
 	
 	<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -194,11 +197,13 @@
     <span><?php echo $loginEmailError; ?></span>
 		<br><br>
 		<input name="loginPassword" placeholder="Salasõna" type="password">
+    <span></span>
 		<br><br>
-		<input type="submit" value="Logi sisse">
+		<input name="loginButton" type="submit" value="Logi sisse">
+    <span><?php echo $notice; ?></span>
 	</form>
 	
-	<h1>Loo kasutaja</h1>
+	<h2>Loo kasutaja</h2>
 	<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 		<label>Eesnimi </label>
 		<input name="signupFirstName" type="text" value="<?php echo $signupFirstName; ?>">

@@ -50,15 +50,14 @@
         <label>mõttega seostuv värv: </label>
         <input name="ideaColor" type="color">
         <br>
-        <input name="
-        
-        " type="submit" value="Salvesta">
+        <input name="ideaBtn" type="submit" value="Salvesta">
         <span><?php echo $notice; ?></span>
+      </form>
       <hr>
       <h2>Senised mõtted</h2>
       <div style="width: 40%">
         <?php echo $allIdeas
-       ;?>
+      ;?>
       </div>
   </body>
 </html>

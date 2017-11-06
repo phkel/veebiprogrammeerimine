@@ -1,9 +1,9 @@
 <?php
   $database = "if17_kippkert";
 // alustan sessiooni
-  session_start
+  session_start();
 //sisselogimise funktsioon
-  function signIn($email, $password) {
+  function signIn($email, $password){
     $notice = "";
     //ühendus serveriga
     $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
@@ -11,13 +11,11 @@
     $stmt->bind_param("s", $email);
     $stmt->bind_result($id, $emailFromDb, $passwordFromDb);
     $stmt->execute();
-
     //kontrollime vastavust
     if ($stmt->fetch()) {
       $hash = hash("sha512", $password);
       if ($hash == $passwordFromDb) {
         $notice = "Logisite sisse";
-
         // määran sessiooni muutujad 
         $_SESSION["userId"] = $id;
         $_SESSION["userEmail"] = $emailFromDb;
@@ -62,11 +60,9 @@
     $data = htmlspecialchars($data); //keelatud sümbolid eemaldatakse
     return $data;
   }
-
   // $x = 5;
   // $y = 6;
   // addValues ();
-
   // function addValues() {
   //   $z = $GLOBALS["x"] + $GLOBALS["y"];
   //   echo "Summa on: " .$z;

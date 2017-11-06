@@ -5,33 +5,14 @@
     header("Location: login.php");
     exit();
   }
+
   //kui logib välja
   if (isset($_GET["logout"])) {
     //lõpetame sessiooni
     session_destroy();
     header("Location: login.php");
   }
-  $dirToRead = "../../img/";
-  //kuna tahan pildifaile, siis filtreerin
-  $picFileTypes = ["jpg", "jpeg", "png", "gif"];
-  $picFiles = [];
-  // $allFiles = scandir($dirToRead);
-  //loen kataloogi ja viskan kaks esimest masiivi liiget (. ja ..) välja
-  $allFiles = array_slice(scandir($dirToRead),2);
-  //var_dump($allFiles);
-  //tsükkel mis töötab ainult massiividega 
-  foreach ($allFiles as $file){
-    $fileType = pathinfo ($file, PATHINFO_EXTENSION);
-    //kas see tüüp on lubatud nimekirjas
-    if (in_array($fileType, $picFileTypes) == true){
-      array_push($picFiles, $file);
-    }
-  }
-  var_dump($picFiles);
-  //mitu pilti on
-  $fileCount = count($picFiles);
-  $picNumber = mt_rand(0, $fileCount -1);
-  $picToShow = $picFiles[$picNumber];
+  $fetchAllUserinfo = fetchAllUserinfo();
 ?>
 
 <!DOCTYPE html>
@@ -47,9 +28,26 @@
       <h2>Unde impedit</h2>
       <p>Consequatur voluptatibus eligendi architecto. Odio dolores corrupti error. Vel amet quas vel totam repudiandae. Ducimus necessitatibus et repellat corporis eveniet doloremque tenetur.
       </p>
-    
-      <p>Üks pilt Tallinna Ülikooli koridorist.</p>
-      <img src="<?php echo $dirToRead .$picToShow?>" alt="Tallinna Ülikool">
+      <p><a href="main.php">Pealeht</a></p>
+      <hr>
+      <h2>Kõik süsteemi kasutajad</h2>
+      
+      <table border="1" style="border: 1px solid black; border-collapse: collapse">
+      <thead>
+      <tr>
+        <th>Eesnimi</th>
+        <th>Perekonnanimi</th>
+        <th>Email</th>
+        <th>Sünna</th>
+        <th>Sugu</th>
+      </tr>
+      </thead>
+      <tbody>
+      <?php echo $fetchAllUserinfo ;?>
+      </tbody>
+      </table>
+      
       <p><a href="?logout=1">Logi välja</a></p>
+
   </body>
 </html>
