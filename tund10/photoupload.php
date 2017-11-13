@@ -64,12 +64,6 @@
 			$uploadOk = 0;
 		}
 
-		// Failisuuruse kontroll
-		if ($_FILES["fileToUpload"]["size"] > 2000000) {
-			$notice .= "Sinu fail ületab lubatud suuruse piiri.";
-			$uploadOk = 0;
-		}
-
 		// Luba kindlaid faililaiendeid
 		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 		&& $imageFileType != "gif" ) {
@@ -77,107 +71,10 @@
 			$uploadOk = 0;
 		}
 
-		// Kas saab laadida?
-		/*if ($uploadOk == 0) {
-			$notice .= "Tekkis viga, üleslaadimine ebaõnnestus.";
-
-		// Kui saab laadida
-		} else {
-			if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-				$notice .= "Pilt ". basename($_FILES["fileToUpload"]["name"]). " on üleslaetud.";
-			} else {
-					$notice .= "Faili üleslaadimine ebaõnnestus.";
-			}
-		} */
-
 		if ($uploadOk == 0) {
 			$notice .= "Tekkis viga, üleslaadimine ebaõnnestus.";
 		// kui saab laadida
 		} else {
-
-			// //loeme EXIF infot, millal pilt tehti
-			// @$exif = exif_read_data($_FILES["fileToUpload"]["tmp_name"], "ANY_TAG", 0, true);
-			// // var_dump($exif);
-			// if(!empty($exif["DateTimeOriginal"])) {
-			// 	$textToImage = "Pilt tehti: " . $exif["DateTimeOriginal"];
-			// } else {
-			// 		$textToImage = "Pildistamise aeg teadmata.";
-			// }
-
-			// //lähtudes failitüübist loon sobiva pildiobjekti
-			// if($imageFileType == "jpg" or $imageFileType == "jpeg") {
-			// 	$myTempImage = imagecreatefromjpeg($_FILES["fileToUpload"]["tmp_name"]);
-			// }
-			// if($imageFileType == "png") {
-			// 	$myTempImage = imagecreatefrompng($_FILES["fileToUpload"]["tmp_name"]);
-			// }
-			// if($imageFileType == "gif") {
-			// 	$myTempImage = imagecreatefromgif($_FILES["fileToUpload"]["tmp_name"]);
-			// }
-
-			//suuruse muutmine, küsime originaalsuurust
-			// $imageWidth = imagesx($myTempImage);
-			// $imageHeight = imagesy($myTempImage);
-			// $sizeRatio = 1;
-			// if($imageWidth > $imageHeight) {
-			// 	$sizeRatio = $imageWidth / $maxWidth;
-			// } else {
-			// 	$sizeRatio = $imageHeight / $maxHeight;
-			// }
-			// $myImage = resize_image($myTempImage, $imageWidth, $imageHeight, round($imageWidth / $sizeRatio), round($imageHeight / $sizeRatio));
-
-			// $myImageThumb = resize_image($myTempImage, $imageWidth, $imageHeight, $thumbWidth, $thumbHeight);
-
-			// //vesimärgi lisamine
-			// $stamp = imagecreatefrompng("../../graphics/hmv_logo.png");
-			// $stampWidth = imagesx($stamp);
-			// $stampHeight = imagesy($stamp);
-			// $stampPosX = round($imageWidth / $sizeRatio) - $stampWidth - $marginRight;
-			// $stampPosY = round($imageHeight / $sizeRatio) - $stampHeight - $marginBottom;
-			// imageCopy($myImage, $stamp, $stampPosX, $stampPosY, 0, 0, $stampWidth, $stampHeight);
-			
-			// //lisame ka teksti vesimärgina
-			// $textColor = imagecolorallocatealpha($myImage, 200, 200, 200, 10);
-			// imagettftext ($myImage, 20, 0, 10, 25, $textColor, "../../graphics/HelveticaNeue.dfont", $textToImage);
-
-			// //salvestame pildi
-			// if($imageFileType == "jpg" or $imageFileType == "jpeg") {
-			// 	if(imagejpeg($myImage, $target_file, 95)){
-			// 		$notice = "Fail" . basename($_FILES["fileToUpload"]["name"]) . " on üleslaetud.";
-			// 	} else {
-			// 		$notice .= "Faili üleslaadimine ebaõnnestus.";
-			// 	}
-			// }
-
-			// if($imageFileType == "png") {
-			// 	if(imagejpeg($myImage, $target_file, 95)){
-			// 		$notice = "Fail" . basename($_FILES["fileToUpload"]["name"]) . " on üleslaetud.";
-			// 	} else {
-			// 		$notice .= "Faili üleslaadimine ebaõnnestus.";
-			// 	}
-			// }
-
-			// if($imageFileType == "gif") {
-			// 	if(imagejpeg($myImage, $target_file, 95)){
-			// 		$notice = "Fail" . basename($_FILES["fileToUpload"]["name"]) . " on üleslaetud.";
-			// 	} else {
-			// 		$notice .= "Faili üleslaadimine ebaõnnestus.";
-			// 	}
-			// }
-
-			// //thumbnaili salvestamine
-			// if($imageFileType == "jpg" or $imageFileType == "jpeg") {
-			// 	if(imagejpeg($myImageThumb, $target_file_thumb, 95)){
-			// 		$notice = "Fail" . basename($_FILES["fileToUpload"]["name"]) . " on üleslaetud.";
-			// 	} else {
-			// 		$notice .= "Faili üleslaadimine ebaõnnestus.";
-			// 	}
-			// }
-
-			//mälu vabastamine
-			// imagedestroy($myImage);
-			// imagedestroy($myTempImage);
-			// imagedestroy($stamp);
 
 			//visibility error
 			if (isset($_POST["visibility"]) && !empty($_POST["visibility"])){ //kui on määratud ja pole tühi
@@ -195,19 +92,13 @@
 			$myPhoto->addTextWatermark("hmv_foto");
 			$myPhoto->savePhoto($target_dir, $target_file);
 			$myPhoto->clearImages();
-			unset($myPhoto);
+			unset($myPhoto); 
 		}
 
 	} else {
 		$notice .= "Palun vali pildifail.";
 	} //kas üldse mõni fail valiti, lõppeb
 	}
-
-	// function resize_image($image, $origW, $origH, $w, $h) {
-	// 	$dst = imagecreatetruecolor($w, $h);
-	// 	imagecopyresampled($dst, $image, 0, 0, 0, 0, $w, $h, $origW, $origH);
-	// 	return $dst;
-	// }
 
 	//pildi salvestamine
   if(isset($_POST["imageBtn"])) {
@@ -233,10 +124,12 @@
 	<br> 
 	Vali pilt üleslaadimiseks:
 	<input type="file" name="fileToUpload" id="fileToUpload">
-	<input type="submit" value="Lisa pilt" name="imageBtn">
+	<input type="submit" value="Lisa pilt" name="imageBtn" id="submitPhoto">
 	<br>
-	<span><?php echo $notice; ?></span>
 </form>
+<span><?php echo $notice; ?></span>
+
 <?php 
+	echo '<script type="text/javascript" src="javascript/checkFileSize.js"></script>';
 	require("footer.php");
 ?>

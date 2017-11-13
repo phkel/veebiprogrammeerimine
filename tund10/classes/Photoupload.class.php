@@ -61,6 +61,10 @@
 
     private function resize_image($image, $origW, $origH, $w, $h) {
       $dst = imagecreatetruecolor($w, $h);
+      //asendame musta värvi pikslid läbipaistvatega, et säilitada vajdusel png piltide läbipaistvus
+      imagesavealpha($dst, true);
+      $transColor = imagecolorallocatealpha($dst, 0, 0, 0, 127);
+      imagefill($dst, 0, 0, $transColor);
       imagecopyresampled($dst, $image, 0, 0, 0, 0, $w, $h, $origW, $origH);
       return $dst;
     }
