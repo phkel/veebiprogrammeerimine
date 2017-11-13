@@ -143,6 +143,24 @@
     $mysqli->close();
     return $html;
   }
+  
+  //pildi salvestamine
+  function saveImage($target_file, $target_file_thumb, $visibility) {
+    //loome andmebaasi ühenduse
+    $mysqli = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+    //valmistame ette käsu andmebaasiserverile
+    $stmt = $mysqli->prepare("INSERT INTO vpphotos (userid, filename, thumbnail, visibility VALUES (?, ?, ?, ?)");
+    echo $mysqli->error;
+    $stmt->bind_param("issi", $_SESSION["userId"], $target_file, $target_file_thumb, $visibility);
+    if($stmt->execute()){
+      $notice = "Pilt on salvestatud";
+    } else {
+      $notice = "Pildi salvestamisel tekkis viga: " .$stmt->error;
+    }
+    $stmt->close();
+    $mysqli->close();
+    return $notice;
+    } 
 
 //sisestuse kontrollimise funktsioon
   function test_input($data) {

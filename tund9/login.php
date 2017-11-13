@@ -235,7 +235,7 @@
 		<br><br>
 
 		
-		<input name="singUpButton" type="submit" value="Loo kasutaja">
+		<input name="signUpButton" type="submit" value="Loo kasutaja">
 	</form>
 		
 </body>

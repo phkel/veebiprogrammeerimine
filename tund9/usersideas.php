@@ -18,7 +18,6 @@
 
   //kui soovitakse ideed salvestada
   if(isset($_POST["ideaBtn"])) {
-
     if(isset($_POST["idea"]) and isset($_POST["ideaColor"]) and !empty($_POST["idea"]) and !empty($_POST["ideaColor"])){
       $myIdea = test_input($_POST["idea"]);
       $notice = saveIdea($myIdea, $_POST["ideaColor"]);
@@ -35,14 +34,14 @@
 <hr>
 <h2>Lisa uus mõte</h2>
 <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-  <label>Päeva esimene mõte: </label>
-  <input name="idea" type="text">
-  <br>
-  <label>mõttega seostuv värv: </label>
-  <input name="ideaColor" type="color">
-  <br>
-  <input name="ideaBtn" type="submit" value="Salvesta">
-  <span><?php echo $notice; ?></span>
+<label>Päeva esimene mõte: </label>
+<input name="idea" type="text">
+<br>
+<label>mõttega seostuv värv: </label>
+<input name="ideaColor" type="color">
+<br>
+<input name="ideaBtn" type="submit" value="Salvesta">
+<span><?php echo $notice; ?></span>
 </form>
 <hr>
 <h2>Senised mõtted</h2>
